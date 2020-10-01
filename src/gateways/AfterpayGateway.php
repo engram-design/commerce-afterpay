@@ -143,7 +143,7 @@ class AfterpayGateway extends BaseGateway
                     'sku' => $lineItem->sku,
                     'price' => [
                         'amount' => (float)$lineItem->salePrice,
-                        'currency' => $order->currency,
+                        'currency' => $order->paymentCurrency,
                     ],
                 ];
             }, $order->lineItems),
