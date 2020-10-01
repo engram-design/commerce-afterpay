@@ -111,7 +111,7 @@ class AfterpayGateway extends BaseGateway
             'merchantReference' => $transaction->hash,
             'totalAmount' => [
                 'amount' => (float)$order->totalPrice,
-                'currency' => $order->currency,
+                'currency' => $order->paymentCurrency,
             ],
             'consumer' => [
                 'phoneNumber' => $order->billingAddress->phone,
@@ -121,18 +121,18 @@ class AfterpayGateway extends BaseGateway
             ],
             'taxAmount' => [
                 'amount' => (float)Currency::round($order->getAdjustmentsTotalByType('tax')),
-                'currency' => $order->currency,
+                'currency' => $order->paymentCurrency,
             ],
             'shippingAmount' => [
                 'amount' => (float)$order->getAdjustmentsTotalByType('shipping'),
-                'currency' => $order->currency,
+                'currency' => $order->paymentCurrency,
             ],
             'discounts' => array_map(function (OrderAdjustment $adjustment) use ($order) {
                 return [
                     'displayName' => $adjustment->name,
                     'amount' => [
                         'amount' => (float)$adjustment->amount,
-                        'currency' => $order->currency,
+                        'currency' => $order->paymentCurrency,
                     ],
                 ];
             }, $this->getOrderAdjustmentsByType($order, 'discount')),
@@ -312,7 +312,7 @@ class AfterpayGateway extends BaseGateway
         $data = [
             'amount' => [
                 'amount' => $transaction->amount,
-                'currency' => $transaction->currency
+                'currency' => $transaction->paymentCurrency
             ],
             'merchantReference' => $transaction->hash,
         ];
